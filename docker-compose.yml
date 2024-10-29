@@ -1,0 +1,29 @@
+
+# service
+services:
+  # web
+  web:
+    build: ./config/web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html/app:/var/www/html
+    restart: always
+    depends_on:
+      - db
+  # db
+  db:
+    image: mysql:5.7
+    platform: linux/x86_64
+    container_name: mysql_db
+    user: "1000:50"
+    ports:
+      - "3306:3306"
+    volumes:
+    - ./config/mysql/data:/var/lib/mysql
+    - ./config/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: root
+    command: --innodb-use-native-aio=0
+
